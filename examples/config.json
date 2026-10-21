@@ -1,0 +1,12 @@
+{
+  "name": "customers",
+  "source": {"path": "customers.csv"},
+  "steps": [
+    {"type": "rename", "mapping": {"Cust ID": "id", "Full Name": "name", "Age": "age", "Country": "country_code", "Joined": "joined"}},
+    {"type": "cast", "columns": {"id": "int", "age": "int", "joined": {"to": "date", "format": "%d/%m/%Y"}}},
+    {"type": "filter", "expr": "age >= 18"},
+    {"type": "derive", "column": "name_upper", "expr": "upper(name)"},
+    {"type": "lookup", "path": "countries.csv", "on": "country_code", "key": "code", "columns": {"country_name": "name"}}
+  ],
+  "target": {"database": "customers.db", "table": "customers", "key": "id"}
+}
